@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cashback Rewards Portal</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#" id="homeNavLink" class="brand">
+        <img id="siteLogoImg" class="hidden" alt="Logo" />
+        <span id="siteNameText">Cashback Rewards Portal</span>
+      </a>
+      <div class="nav-actions">
+        <button id="toggleAdminBtn" class="btn btn-sm btn-header">Admin Login</button>
+        <button id="logoutAdminBtn" class="btn btn-sm btn-danger hidden">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== CUSTOMER PORTAL VIEW ==================== -->
+  <main id="customerView" class="container">
+
+    <!-- PAGE 1: COMPANY VERIFICATION -->
+    <section id="step1Card" class="card">
+      <h1 id="siteHeading">Claim Your Exclusive Business Cashback</h1>
+      <p id="siteWelcome" class="subtitle">Verify your registered company details below to unlock your special cashback reward.</p>
+
+      <div id="step1Alert" class="alert hidden"></div>
+
+      <form id="verifyForm">
+        <div class="form-group">
+          <label for="companyName">Company Name</label>
+          <input type="text" id="companyName" required placeholder="Enter registered company name" />
+        </div>
+        <div class="form-group">
+          <label for="mobile">Registered Mobile Number</label>
+          <input type="tel" id="mobile" required placeholder="e.g. 9876543210" />
+        </div>
+        <div class="form-group">
+          <label for="gst">GST Number</label>
+          <input type="text" id="gst" required placeholder="e.g. 29ABCDE1234F1Z5" style="text-transform:uppercase;" />
+        </div>
+        <button type="submit" class="btn btn-full">Verify Company</button>
+      </form>
+
+      <div id="siteInstructions" class="instructions-box"></div>
+    </section>
+
+    <!-- PAGE 2: CASHBACK CODE ENTRY (No codes or amounts visible beforehand) -->
+    <section id="step2Card" class="card hidden">
+      <h2>Special Cashback Offer</h2>
+      <p class="subtitle">Enter your cashback code to reveal your cashback reward.</p>
+
+      <div id="step2Alert" class="alert hidden"></div>
+
+      <form id="redeemForm">
+        <div class="form-group">
+          <label for="cashbackCode">Enter Cashback Code</label>
+          <input type="text" id="cashbackCode" required placeholder="Enter your secret code" style="text-transform:uppercase;" autocomplete="off" />
+        </div>
+        <button type="submit" class="btn btn-full">Verify &amp; Reveal Cashback</button>
+      </form>
+    </section>
+
+    <!-- PAGE 3: SUCCESSFUL CASHBACK SCREEN -->
+    <section id="step3Card" class="card hidden">
+      <div class="reward-banner">
+        <h2>CONGRATULATIONS! YOU WON CASHBACK!</h2>
+        <div id="resAmount" class="reward-amount">₹0</div>
+        <p id="resCompanyBanner"></p>
+      </div>
+
+      <div class="details-grid">
+        <div class="detail-item">
+          <small>Company Name</small>
+          <strong id="resCompany"></strong>
+        </div>
+        <div class="detail-item">
+          <small>Cashback Amount</small>
+          <strong id="resAmountDetail"></strong>
+        </div>
+        <div class="detail-item">
+          <small>Cashback Reference ID</small>
+          <strong id="resRefId"></strong>
+        </div>
+        <div class="detail-item">
+          <small>Cashback Code</small>
+          <strong id="resCode"></strong>
+        </div>
+        <div class="detail-item">
+          <small>Redemption Date &amp; Time</small>
+          <strong id="resDate"></strong>
+        </div>
+        <div class="detail-item">
+          <small>Share Link Expires On</small>
+          <strong id="resExpiry"></strong>
+        </div>
+      </div>
+
+      <div class="share-box">
+        <strong>Share Your Result (Valid for <span id="shareHoursLabel">24</span> Hours)</strong>
+        <p id="shareUrlPreview" class="share-url-text"></p>
+        <div class="share-actions">
+          <button type="button" id="copyLinkBtn" class="btn btn-outline">Copy Link</button>
+          <a id="whatsappShareBtn" target="_blank" rel="noopener" class="btn btn-success">Share on WhatsApp</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== SHARE CERTIFICATE VIEW ==================== -->
+  <main id="shareView" class="container hidden">
+    <section id="shareExpiredCard" class="card hidden" style="text-align:center;">
+      <h2 style="color: var(--danger);">Share Link Expired or Invalid</h2>
+      <p id="shareExpiredMsg" class="subtitle"></p>
+      <a href="#" id="backToPortalBtn" class="btn">Go to Cashback Portal</a>
+    </section>
+
+    <section id="shareValidCard" class="card hidden">
+      <div class="reward-banner">
+        <h2>VERIFIED CASHBACK REWARD</h2>
+        <div id="sAmount" class="reward-amount"></div>
+        <p id="sCompanyBanner"></p>
+      </div>
+
+      <div class="details-grid">
+        <div class="detail-item">
+          <small>Company Name</small>
+          <strong id="sCompany"></strong>
+        </div>
+        <div class="detail-item">
+          <small>Cashback Reference ID</small>
+          <strong id="sRefId"></strong>
+        </div>
+        <div class="detail-item">
+          <small>Link Created On</small>
+          <strong id="sCreated"></strong>
+        </div>
+        <div class="detail-item">
+          <small>Link Expires On</small>
+          <strong id="sExpires"></strong>
+        </div>
+      </div>
+
+      <p class="alert alert-info" style="margin-bottom:0;">
+        Read-only verification certificate. Cashback offers are strictly one-time per company.
+      </p>
+    </section>
+  </main>
+
+  <!-- ==================== ADMIN LOGIN VIEW ==================== -->
+  <main id="adminLoginView" class="container hidden">
+    <div class="card">
+      <h2>Admin Dashboard Login</h2>
+      <p class="subtitle">Default demo login: <strong>admin@cashback.com</strong> / <strong>admin123</strong></p>
+      <div id="adminLoginAlert" class="alert alert-error hidden"></div>
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label for="adminEmail">Admin Email</label>
+          <input type="email" id="adminEmail" value="admin@cashback.com" required />
+        </div>
+        <div class="form-group">
+          <label for="adminPassword">Password</label>
+          <input type="password" id="adminPassword" value="admin123" required />
+        </div>
+        <button type="submit" class="btn btn-full">Sign In to Admin Panel</button>
+      </form>
+    </div>
+  </main>
+
+  <!-- ==================== ADMIN DASHBOARD VIEW ==================== -->
+  <main id="adminDashboardView" class="admin-container hidden">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="statsTab">Dashboard Stats</button>
+      <button class="tab-btn" data-tab="settingsTab">Website Settings</button>
+      <button class="tab-btn" data-tab="companiesTab">Companies</button>
+      <button class="tab-btn" data-tab="offersTab">Cashback Offers</button>
+      <button class="tab-btn" data-tab="redemptionsTab">Redemptions</button>
+    </div>
+
+    <!-- E. DASHBOARD STATISTICS -->
+    <section id="statsTab" class="tab-panel">
+      <div class="stats-grid">
+        <div class="stat-card"><small>Total Companies</small><div id="statCompanies" class="stat-val">0</div></div>
+        <div class="stat-card"><small>Total Redemptions</small><div id="statRedemptions" class="stat-val">0</div></div>
+        <div class="stat-card"><small>Total Cashback Paid</small><div id="statAmount" class="stat-val">₹0</div></div>
+        <div class="stat-card"><small>Active Offers</small><div id="statOffers" class="stat-val">0</div></div>
+        <div class="stat-card"><small>Expired Share Links</small><div id="statExpired" class="stat-val">0</div></div>
+      </div>
+      <div class="card">
+        <h3>Sample Test Credentials (Pre-Loaded)</h3>
+        <p class="subtitle">Use these details on the customer homepage to test verification and redemption:</p>
+        <ul style="padding-left:1.25rem; font-size:0.92rem; line-height:1.8;">
+          <li><strong>Company 1:</strong> Apex Industrial Supplies | Mobile: <code>9876543210</code> | GST: <code>29ABCDE1234F1Z5</code></li>
+          <li><strong>Company 2:</strong> Sunrise Packaging Pvt Ltd | Mobile: <code>9845012345</code> | GST: <code>27FGHIJ5678K1Z2</code></li>
+          <li><strong>Active Offers:</strong> Code <code>IM198</code> (₹2,000) &amp; Code <code>IM289</code> (₹1,000)</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- A. WEBSITE SETTINGS -->
+    <section id="settingsTab" class="tab-panel hidden">
+      <div class="card">
+        <h2>Website Settings</h2>
+        <div id="settingsAlert" class="alert alert-success hidden"></div>
+        <form id="settingsForm">
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Website Name</label>
+              <input type="text" id="setSiteName" required />
+            </div>
+            <div class="form-group">
+              <label>Share Link Expiry (Hours)</label>
+              <input type="number" id="setExpiryHours" min="1" value="24" required />
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Website Logo URL</label>
+              <input type="text" id="setLogoUrl" placeholder="https://example.com/logo.png" />
+            </div>
+            <div class="form-group">
+              <label>Or Upload Logo Image</label>
+              <input type="file" id="setLogoFile" accept="image/*" />
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Primary Theme Color</label>
+              <input type="color" id="setPrimaryColor" value="#2563eb" style="height:44px;" />
+            </div>
+            <div class="form-group">
+              <label>Secondary Theme Color</label>
+              <input type="color" id="setSecondaryColor" value="#1e40af" style="height:44px;" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Website Heading</label>
+            <input type="text" id="setHeading" required />
+          </div>
+          <div class="form-group">
+            <label>Welcome Message</label>
+            <textarea id="setWelcome" rows="2"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Customer Instructions</label>
+            <textarea id="setInstructions" rows="3"></textarea>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Contact Details</label>
+              <input type="text" id="setContact" />
+            </div>
+            <div class="form-group">
+              <label>Footer Text</label>
+              <input type="text" id="setFooter" />
+            </div>
+          </div>
+          <button type="submit" class="btn">Save Website Settings</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- B. COMPANY MANAGEMENT -->
+    <section id="companiesTab" class="tab-panel hidden">
+      <div class="card">
+        <h3>Add / Edit Company</h3>
+        <form id="companyForm" class="grid-2">
+          <div class="form-group"><label>Company Name</label><input type="text" id="compName" required /></div>
+          <div class="form-group"><label>Registered Mobile</label><input type="tel" id="compMobile" required /></div>
+          <div class="form-group"><label>GST Number</label><input type="text" id="compGst" required style="text-transform:uppercase;" /></div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <button type="submit" class="btn btn-full">Save Company</button>
+          </div>
+        </form>
+        <hr class="divider" />
+        <h3>Bulk Upload CSV</h3>
+        <p class="hint">Format: <code>Company Name,Mobile,GST</code> (one company per line)</p>
+        <div class="inline-row">
+          <input type="file" id="csvUploadInput" accept=".csv" style="max-width:300px;" />
+          <button type="button" id="csvUploadBtn" class="btn btn-outline">Upload CSV</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="space-between">
+          <h3>Approved Companies</h3>
+          <input type="search" id="companySearch" placeholder="Search company, GST, mobile..." style="max-width:280px;" />
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Company Name</th><th>Mobile</th><th>GST Number</th><th>Actions</th></tr></thead>
+            <tbody id="companiesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- C. CASHBACK MANAGEMENT -->
+    <section id="offersTab" class="tab-panel hidden">
+      <div class="card">
+        <h3 id="offerFormTitle">Create Cashback Offer</h3>
+        <form id="offerForm" class="grid-2">
+          <input type="hidden" id="editOfferId" />
+          <div class="form-group"><label>Cashback Code</label><input type="text" id="offerCode" required style="text-transform:uppercase;" placeholder="e.g. IM198" /></div>
+          <div class="form-group"><label>Cashback Amount (₹)</label><input type="number" id="offerAmount" required min="1" placeholder="e.g. 2000" /></div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="offerActive">
+              <option value="true">Active</option>
+              <option value="false">Inactive</option>
+            </select>
+          </div>
+          <div class="form-group inline-row" style="align-items:flex-end;">
+            <button type="submit" class="btn btn-full">Save Offer</button>
+            <button type="button" id="cancelOfferEdit" class="btn btn-outline hidden">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>Configured Cashback Offers</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Code</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="offersTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- D. REDEMPTION MANAGEMENT -->
+    <section id="redemptionsTab" class="tab-panel hidden">
+      <div class="card">
+        <div class="space-between">
+          <h3>Redeemed Companies</h3>
+          <button id="exportCsvBtn" class="btn btn-success btn-sm">Export CSV Report</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Company Name</th><th>GST</th><th>Code</th><th>Amount</th><th>Reference ID</th><th>Date</th><th>Share Link</th>
+              </tr>
+            </thead>
+            <tbody id="redemptionsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div id="siteContact" style="margin-bottom: 0.35rem;"></div>
+    <div id="siteFooterText"></div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
